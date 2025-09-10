@@ -52,6 +52,6 @@ export default [
     }
   },
   {
-    ignores: ['dist/', 'node_modules/', '*.js', '!eslint.config.js']
+    ignores: ['dist/', 'node_modules/', '**/*.js']
   }
 ];

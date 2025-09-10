@@ -71,7 +71,6 @@ export async function checkNoChannelLinks(ctx: Context, next: Function) {
       // Get url
       let url: string
       if (entity.type === 'text_link' && entity.url) {
-      if (entity.type === 'text_link' && entity.url) {
         url = sanitizeInput(entity.url)
       } else {
         const messageText = messageToCheck.text || messageToCheck.caption || ''

@@ -74,7 +74,7 @@ export function sanitizeMessageText(text: string): string {
   }
   
   return text
-    .replace(/[\x00-\x1F\x7F]/g, '') // Remove control characters
+    .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, '') // Remove most control characters, keep \n and \r
     .trim()
     .slice(0, 4096); // Telegram message limit
 }

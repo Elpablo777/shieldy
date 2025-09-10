@@ -105,11 +105,31 @@ export function checkRateLimit(key: string, maxRequests: number = 10, windowMs: 
 }
 
 // Clean expired rate limit entries periodically
-setInterval(() => {
-  const now = Date.now();
-  for (const [key, record] of rateLimitMap.entries()) {
-    if (now > record.resetTime) {
-      rateLimitMap.delete(key);
+let rateLimitCleanupInterval: NodeJS.Timeout | null = null;
+
+/**
+ * Starts the periodic cleanup of expired rate limit entries.
+ * Call this function once during application initialization.
+ */
+export function initRateLimitCleanup(intervalMs: number = 300000): void {
+  if (rateLimitCleanupInterval !== null) return; // Prevent multiple intervals
+  rateLimitCleanupInterval = setInterval(() => {
+    const now = Date.now();
+    for (const [key, record] of rateLimitMap.entries()) {
+      if (now > record.resetTime) {
+        rateLimitMap.delete(key);
+      }
     }
+  }, intervalMs);
+}
+
+/**
+ * Stops the periodic cleanup of expired rate limit entries.
+ * Useful for tests or graceful shutdown.
+ */
+export function stopRateLimitCleanup(): void {
+  if (rateLimitCleanupInterval !== null) {
+    clearInterval(rateLimitCleanupInterval);
+    rateLimitCleanupInterval = null;
   }
-}, 300000); // Clean every 5 minutes
+}
